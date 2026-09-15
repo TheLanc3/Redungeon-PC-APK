@@ -20,7 +20,7 @@ mkdir -p "${RELEASES_DIR}/PC-Windows"
 mkdir -p "${RELEASES_DIR}/PC-Linux"
 mkdir -p "${RELEASES_DIR}/Android"
 
-# === TODO: split RedungeonPC.csproj into to .csproj files for Tests
+# === TODO: split RedungeonPC.csproj into 2 .csproj files for Tests
 # 1. Test stage
 # echo -e "${BOLD}${YELLOW}[1/4] Starting Input Contract Tests...${RESET}"
 # dotnet run --project "${SOURCE_DIR}/RedungeonPC_ResolutionManager/Tests/RedungeonPC.InputContractTests" \ 
@@ -34,6 +34,8 @@ dotnet publish "${SOURCE_DIR}/RedungeonPC_ResolutionManager/RedungeonPC.csproj" 
     -c Release \
     -r win-x64 \
     -o "${RELEASES_DIR}/PC-Windows"
+# Goofy fix of copying frost-border.png for Windows build
+cp "${SOURCE_DIR}/RedungeonPC_ResolutionManager/Content/Images/frost-border.png" "${RELEASES_DIR}/PC-Windows/Content/Images/frost-border.png"
 echo -e "${GREEN}✓ Build for Windows successfully compiled!${RESET}\n"
 
 # 3. Build for Linux stage (linux-x64)

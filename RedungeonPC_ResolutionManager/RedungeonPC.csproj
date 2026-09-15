@@ -55,16 +55,11 @@
   <!-- TODO: fix extract process for SDL2 library-->
   <Target Name="ExtractSDL2ToRoot" AfterTargets="ComputeFilesToPublish">
     <ItemGroup>
-      <!-- 1. Исключаем все варианты SDL2 из внутриисполняемого SingleFile -->
       <ResolvedFileToPublish Update="@(ResolvedFileToPublish)"
-                             Condition="$([System.String]::Copy('%(ResolvedFileToPublish.Filename)').Contains('SDL2'))">
+                             Condition="'%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == 'SDL2.dll' or '%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == 'libSDL2-2.0.so.0' or '%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == 'libSDL2.dylib'">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </ResolvedFileToPublish>
-
-      <!-- 2. Берем SDL2 строго из папки runtimes и копируем прямо в корень рядом с .exe -->
-      <ResolvedFileToPublish Update="@(ResolvedFileToPublish)"
-                             Condition="$([System.String]::Copy('%(ResolvedFileToPublish.Filename)').Contains('SDL2'))">
-        <RelativePath>%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)</RelativePath>
+        <RelativePath>%(Filename)%(Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
