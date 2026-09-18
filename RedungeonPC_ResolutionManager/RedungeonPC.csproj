@@ -52,11 +52,20 @@
                       Version="3.8.5.1"/>
   </ItemGroup>
 
-  <!-- TODO: fix extract process for SDL2 library-->
-  <Target Name="ExtractSDL2ToRoot" AfterTargets="ComputeFilesToPublish">
+  <!--
+    SDL2 must sit next to the single-file .exe at publish time.
+    The .NET single-file bundler reads ExcludeFromSingleFile BEFORE it packs,
+    so we must set it in a target that runs before _GeneratePublishDependencyFile.
+    Using AfterTargets="ResolveAssemblyReferences" is the safest hook that
+    still has all NuGet-resolved native libs available.
+  -->
+  <Target Name="ExcludeSDL2FromSingleFile" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
-      <ResolvedFileToPublish Update="@(ResolvedFileToPublish)"
-                             Condition="'%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == 'SDL2.dll' or '%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == 'libSDL2-2.0.so.0' or '%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == 'libSDL2.dylib'">
+      <!-- Mark SDL2 native libs so the bundler leaves them as external files. -->
+      <ResolvedFileToPublish Include="@(ResolvedFileToPublish)"
+                             Condition="'%(Filename)' == 'SDL2' or
+                                        '%(Filename)' == 'libSDL2-2.0.so' or
+                                        '%(Filename)' == 'libSDL2'">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <RelativePath>%(Filename)%(Extension)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
