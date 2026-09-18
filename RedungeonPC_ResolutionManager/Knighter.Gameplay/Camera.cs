@@ -37,7 +37,7 @@ public class Camera : Component
 			float zoom = ZoomBox.Value / Settings.GuiScale;
 			
 			#if ANDROID
-			return zoom * 2.25f;
+			return zoom * 2.15f;
 			#else
 			return zoom;
 			#endif
