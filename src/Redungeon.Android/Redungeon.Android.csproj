@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <ApplicationId>com.redungeon.personal</ApplicationId>
+    <ApplicationTitle>Redungeon</ApplicationTitle>
+    <ApplicationVersion>5</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
+    <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
+    <RuntimeIdentifier>android-arm64</RuntimeIdentifier>
+    <AndroidPackageFormats>apk</AndroidPackageFormats>
+    <AndroidUseAssemblyStore>true</AndroidUseAssemblyStore>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <!-- Use runtime JNI registration: the .NET 10 marshal-method optimization
+         leaves MainActivity.n_onCreate unresolved on affected Android devices. -->
+    <AndroidEnableMarshalMethods>false</AndroidEnableMarshalMethods>
+    <PublishTrimmed>false</PublishTrimmed>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableMGCBItems>false</EnableMGCBItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.Android" Version="3.8.5.1" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.5.1" />
+    <Compile Include="*.cs" />
+    <AndroidResource Include="Resources/drawable/icon_knight.png" />
+    <AndroidAsset Include="../Redungeon.Content/**/*.*"
+        Exclude="../Redungeon.Content/**/*.mgcb;../Redungeon.Content/Shaders/**;../Redungeon.Content/Music/*.xnb;../Redungeon.Content/Music/*.ogg" 
+        Link="Content/%(RecursiveDir)%(Filename)%(Extension)" />
+    <MonoGameContentReference Include="../Redungeon.Content/Android.mgcb" />
+  </ItemGroup>
+</Project>

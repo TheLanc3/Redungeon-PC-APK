@@ -1,0 +1,78 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+
+    <TargetFramework>net10.0</TargetFramework>
+
+    <RollForward>Major</RollForward>
+
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <TieredCompilation>false</TieredCompilation>
+    <EnableMGCBItems>false</EnableMGCBItems>
+
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+
+    <MonoGameMGCBAdditionalArguments></MonoGameMGCBAdditionalArguments>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Icon.ico"/>
+    <None Remove="Icon.bmp"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Icon.ico"/>
+    <EmbeddedResource Include="Icon.bmp"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL"
+                      Version="3.8.5.1"/>
+
+    <PackageReference Include="MonoGame.Content.Builder.Task"
+                      Version="3.8.5.1"/>
+    <ProjectReference Include="../Redungeon.Core/Redungeon.Core.csproj"/>
+  </ItemGroup>
+
+  <!--
+    SDL2 must sit next to the single-file .exe at publish time.
+    The .NET single-file bundler reads ExcludeFromSingleFile BEFORE it packs,
+    so we must set it in a target that runs before _GeneratePublishDependencyFile.
+    Using AfterTargets="ResolveAssemblyReferences" is the safest hook that
+    still has all NuGet-resolved native libs available.
+  -->
+  <Target Name="ExcludeSDL2FromSingleFile" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <!-- Mark SDL2 native libs so the bundler leaves them as external files. -->
+      <ResolvedFileToPublish Include="@(ResolvedFileToPublish)"
+                             Condition="'%(Filename)' == 'SDL2' or
+                                        '%(Filename)' == 'libSDL2-2.0.so' or
+                                        '%(Filename)' == 'libSDL2'">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <RelativePath>%(Filename)%(Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <Content Include="../Redungeon.Content/**/*.*"
+             Exclude="../Redungeon.Content/**/*.mgcb;../Redungeon.Content/Music/*.mp3;../Redungeon.Content/Shaders/Compiled/*.mgfxo"
+             Link="Content/%(RecursiveDir)%(Filename)%(Extension)"/>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <MonoGameContentReference Include="../Redungeon.Content/Content.mgcb"/>
+  </ItemGroup>
+
+</Project>
