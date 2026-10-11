@@ -66,7 +66,7 @@
   <ItemGroup>
     <Content Include="../Redungeon.Content/**/*.*"
              Exclude="../Redungeon.Content/**/*.mgcb;../Redungeon.Content/Music/*.mp3;../Redungeon.Content/Shaders/Compiled/*.mgfxo"
-             Link="Content/%(RecursiveDir)%(Filename)%(Extension)"/>
+             Link="Content/%(RecursiveDir)%(Filename)%(Extension)">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -22,7 +22,7 @@
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.5.1" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.5.1" />
-    <Compile Include="*.cs" />
+    <ProjectReference Include="../Redungeon.Core/Redungeon.Core.csproj" />
     <AndroidResource Include="Resources/drawable/icon_knight.png" />
     <AndroidAsset Include="../Redungeon.Content/**/*.*"
         Exclude="../Redungeon.Content/**/*.mgcb;../Redungeon.Content/Shaders/**;../Redungeon.Content/Music/*.xnb;../Redungeon.Content/Music/*.ogg" 
